@@ -10,6 +10,9 @@ app.use(express.json());
 // DB
 const MONGODB_URI = "mongodb+srv://admin:dAX3uRtkdhUdqx4o@mongodb-tutorial.d7woi.mongodb.net/BlogService?retryWrites=true&w=majority";
 
+// Models
+const { User } = require('./models/User');
+
 const server = async () => {
     try {
         await mongoose.connect(MONGODB_URI);
