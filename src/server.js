@@ -61,12 +61,42 @@ const server = async () => {
                 const { userId } = req.params;
                 if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ err: "invalid userId" });
                 const user = await User.findOne({ _id: userId });
-                res
+                return res
                     .status(200)
                     .send({ user });
             }
             catch (err) {
-                res
+                return res
+                    .status(500)
+                    .send({ error: err.message });
+            }
+        });
+
+        app.put("/users/:userId", async (req, res) => {
+            try {
+                const { userId } = req.params;
+                const { username, name, age, email } = req.body;
+                const [firstName, lastName] = [name.first, name.last];
+
+                if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ error: "invalid userId" });
+                if (!username) return res.status(400).send({ error: "Username is undefined." });
+                if (typeof (username) !== 'string') return res.status(400).send({ error: "Username must be a string." });
+                // 나머지 name, age, email에 대해서도 1) 해당 값들이 있는지 2) 데이터 타입이 올바른지 확인 필요
+                const user = await User.findOneAndUpdate({ _id: userId }, {
+                    $set: {
+                        'username': username,
+                        'name.first': firstName,
+                        'name.last': lastName,
+                        'age': age,
+                        'email': email,
+                    }
+                }, { new: true });
+                return res
+                    .status(200)
+                    .send({ user });
+            }
+            catch (err) {
+                return res
                     .status(500)
                     .send({ error: err.message });
             }
@@ -75,14 +105,19 @@ const server = async () => {
         app.delete("/users/:userId", async (req, res) => {
             try {
                 const { userId } = req.params;
-                if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ err: "invalid userId" });
+                if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ error: "invalid userId" });
                 const user = await User.findOneAndDelete({ _id: userId });
-                res
+                if (!user) {
+                    return res
+                        .status(400)
+                        .send({ error: "invalid userId" });
+                }
+                return res
                     .status(200)
                     .send({ user });
             }
             catch (err) {
-                res
+                return res
                     .status(500)
                     .send({ error: err.message });
             }
