@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const userRouter = Router();
+const mongoose = require("mongoose");
 const { User } = require('../models/User');
 
 userRouter.post("/", async (req, res) => {
@@ -8,12 +9,12 @@ userRouter.post("/", async (req, res) => {
         if (!username) {
             return res
                 .status(400)
-                .send({ err: "Username is required." });
+                .send({ error: "Username is required." });
         }
         if (!name || !name.first || !name.last) {
             return res
                 .status(400)
-                .send({ err: "Both first and last name are required." });
+                .send({ error: "Both first and last name are required." });
         }
         const user = new User(req.body);
         await user.save();
@@ -24,7 +25,7 @@ userRouter.post("/", async (req, res) => {
     catch (err) {
         return res
             .status(500)
-            .send({ error: err.message });
+            .send({ error: { name: err.name, message: err.message } });
     }
 });
 
@@ -38,15 +39,14 @@ userRouter.get("/", async (req, res) => {
     catch (err) {
         return res
             .status(500)
-            .send({ error: err.message });
+            .send({ error: { name: err.name, message: err.message } });
     }
 });
 
 userRouter.get("/:userId", async (req, res) => {
     try {
         const { userId } = req.params;
-        if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ err: "invalid userId" });
-        const user = await User.findOne({ _id: userId });
+        if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ error: "invalid userId" }); const user = await User.findOne({ _id: userId });
         return res
             .status(200)
             .send({ user });
@@ -54,7 +54,7 @@ userRouter.get("/:userId", async (req, res) => {
     catch (err) {
         return res
             .status(500)
-            .send({ error: err.message });
+            .send({ error: { name: err.name, message: err.message } });
     }
 });
 
@@ -65,10 +65,11 @@ userRouter.put("/:userId", async (req, res) => {
         const [firstName, lastName] = [name.first, name.last];
 
         if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ error: "invalid userId" });
-        if (!username) return res.status(400).send({ error: "Username is undefined." });
+        if (!username) return res.status(400).send({ error: "Username is required." });
         if (typeof (username) !== 'string') return res.status(400).send({ error: "Username must be a string." });
         // 나머지 name, age, email에 대해서도 1) 해당 값들이 있는지 2) 데이터 타입이 올바른지 확인 필요                
 
+        // let user = await User.findById(userId);
         const user = await User.findOneAndUpdate({ _id: userId }, {
             $set:
             {
@@ -86,7 +87,8 @@ userRouter.put("/:userId", async (req, res) => {
     catch (err) {
         return res
             .status(500)
-            .send({ error: err.message });
+            // .send({ error: err.message });
+            .send({ error: { name: err.name, message: err.message } });
     }
 });
 
@@ -107,7 +109,7 @@ userRouter.delete("/:userId", async (req, res) => {
     catch (err) {
         return res
             .status(500)
-            .send({ error: err.message });
+            .send({ error: { name: err.name, message: err.message } });
     }
 });
 

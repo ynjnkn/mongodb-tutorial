@@ -22,7 +22,7 @@ const server = async () => {
         app.listen(3000, () => console.log("Server listening on port 3000"));
     }
     catch (err) {
-        console.log({ error: err.message });
+        console.log({ error: { name: err.name, message: err.message } });
     }
 }
 
