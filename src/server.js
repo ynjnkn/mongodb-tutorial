@@ -28,7 +28,23 @@ const server = async () => {
                     .status(500)
                     .send({ error: err.message });
             }
-        })
+        });
+
+        app.get("/users/:userId", async (req, res) => {
+            try {
+                const { userId } = req.params;
+                if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ err: "invalid userId" });
+                const user = await User.findOne({ _id: userId });
+                res
+                    .status(200)
+                    .send({ user });
+            }
+            catch (err) {
+                res
+                    .status(500)
+                    .send({ error: err.message });
+            }
+        });
 
         app.post("/users", async (req, res) => {
             try {
@@ -54,7 +70,7 @@ const server = async () => {
                     .status(500)
                     .send({ error: err.message });
             }
-        })
+        });
 
         app.listen(3000, () => console.log("Server listening on port 3000"));
     }
