@@ -23,6 +23,7 @@ userRouter.post("/", async (req, res) => {
             .send({ user })
     }
     catch (err) {
+        console.log({ error: { name: err.name, message: err.message } })
         return res
             .status(500)
             .send({ error: { name: err.name, message: err.message } });
@@ -37,6 +38,7 @@ userRouter.get("/", async (req, res) => {
             .json({ users });
     }
     catch (err) {
+        console.log({ error: { name: err.name, message: err.message } })
         return res
             .status(500)
             .send({ error: { name: err.name, message: err.message } });
@@ -52,6 +54,7 @@ userRouter.get("/:userId", async (req, res) => {
             .send({ user });
     }
     catch (err) {
+        console.log({ error: { name: err.name, message: err.message } })
         return res
             .status(500)
             .send({ error: { name: err.name, message: err.message } });
@@ -85,9 +88,9 @@ userRouter.put("/:userId", async (req, res) => {
             .send({ user });
     }
     catch (err) {
+        console.log({ error: { name: err.name, message: err.message } })
         return res
             .status(500)
-            // .send({ error: err.message });
             .send({ error: { name: err.name, message: err.message } });
     }
 });
@@ -107,6 +110,7 @@ userRouter.delete("/:userId", async (req, res) => {
             .send({ user });
     }
     catch (err) {
+        console.log({ error: { name: err.name, message: err.message } })
         return res
             .status(500)
             .send({ error: { name: err.name, message: err.message } });
