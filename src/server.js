@@ -16,6 +16,32 @@ const server = async () => {
         await mongoose.connect(MONGODB_URI);
         console.log("MongoDB Connected");
 
+        app.post("/users", async (req, res) => {
+            try {
+                let { username, name } = req.body;
+                if (!username) {
+                    return res
+                        .status(400)
+                        .send({ err: "Username is required." });
+                }
+                if (!name || !name.first || !name.last) {
+                    return res
+                        .status(400)
+                        .send({ err: "Both first and last name are required." });
+                }
+                const user = new User(req.body);
+                await user.save();
+                return res
+                    .status(201)
+                    .send({ user })
+            }
+            catch (err) {
+                return res
+                    .status(500)
+                    .send({ error: err.message });
+            }
+        });
+
         app.get("/users", async (req, res) => {
             try {
                 const users = await User.find({});
@@ -46,27 +72,17 @@ const server = async () => {
             }
         });
 
-        app.post("/users", async (req, res) => {
+        app.delete("/users/:userId", async (req, res) => {
             try {
-                let { username, name } = req.body;
-                if (!username) {
-                    return res
-                        .status(400)
-                        .send({ err: "Username is required." });
-                }
-                if (!name || !name.first || !name.last) {
-                    return res
-                        .status(400)
-                        .send({ err: "Both first and last name are required." });
-                }
-                const user = new User(req.body);
-                await user.save();
-                return res
-                    .status(201)
-                    .send({ user })
+                const { userId } = req.params;
+                if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ err: "invalid userId" });
+                const user = await User.findOneAndDelete({ _id: userId });
+                res
+                    .status(200)
+                    .send({ user });
             }
             catch (err) {
-                return res
+                res
                     .status(500)
                     .send({ error: err.message });
             }
