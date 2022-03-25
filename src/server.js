@@ -14,7 +14,7 @@ app.use(express.json());
 const server = async () => {
     try {
         await mongoose.connect(MONGODB_URI);
-        mongoose.set("debug", true);
+        // mongoose.set("debug", true);
         console.log("MongoDB Connected");
 
         app.post("/users", async (req, res) => {
@@ -82,9 +82,11 @@ const server = async () => {
                 if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ error: "invalid userId" });
                 if (!username) return res.status(400).send({ error: "Username is undefined." });
                 if (typeof (username) !== 'string') return res.status(400).send({ error: "Username must be a string." });
-                // 나머지 name, age, email에 대해서도 1) 해당 값들이 있는지 2) 데이터 타입이 올바른지 확인 필요
+                // 나머지 name, age, email에 대해서도 1) 해당 값들이 있는지 2) 데이터 타입이 올바른지 확인 필요                
+
                 const user = await User.findOneAndUpdate({ _id: userId }, {
-                    $set: {
+                    $set:
+                    {
                         'username': username,
                         'name.first': firstName,
                         'name.last': lastName,
