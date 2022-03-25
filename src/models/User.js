@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
+        unique: true,
     },
     name: {
         first: {
@@ -16,7 +17,10 @@ const userSchema = new mongoose.Schema({
         },
     },
     age: Number,
-    email: String,
+    email: {
+        type: String,
+        unique: true,
+    }
 }, { timestamps: true });
 
 const User = mongoose.model('user', userSchema);

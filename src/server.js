@@ -24,7 +24,6 @@ const server = async () => {
                     .json({ users });
             }
             catch (err) {
-                console.log(err)
                 return res
                     .status(500)
                     .send({ error: err.message });
@@ -51,7 +50,6 @@ const server = async () => {
                     .send({ user })
             }
             catch (err) {
-                console.log(err)
                 return res
                     .status(500)
                     .send({ error: err.message });
