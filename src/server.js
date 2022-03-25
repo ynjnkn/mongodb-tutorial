@@ -14,6 +14,7 @@ app.use(express.json());
 const server = async () => {
     try {
         await mongoose.connect(MONGODB_URI);
+        mongoose.set("debug", true);
         console.log("MongoDB Connected");
 
         app.post("/users", async (req, res) => {
