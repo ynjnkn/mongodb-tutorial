@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
+// const { generateFakeData } = require("../faker");
 
 // Import DB
 const MONGODB_URI = "mongodb+srv://admin:dAX3uRtkdhUdqx4o@mongodb-tutorial.d7woi.mongodb.net/BlogService?retryWrites=true&w=majority";
@@ -15,6 +16,9 @@ const server = async () => {
         await mongoose.connect(MONGODB_URI);
         // mongoose.set("debug", true);
         console.log("MongoDB Connected");
+
+        // Create Fake Data
+        // await generateFakeData(100, 10, 300);
 
         // Connect Middlewares
         app.use(express.json());
