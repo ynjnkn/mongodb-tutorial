@@ -9,10 +9,10 @@ commentRouter.post("/", async (req, res) => {
     try {
         const { blogId } = req.params;
         const { content, userId } = req.body;
-        let blog = await Blog.findById(blogId);
-        let user = await User.findById(userId);
-
-        console.log("blog", blog);
+        const [blog, user] = await Promise.all([
+            Blog.findById(blogId),
+            User.findById(userId),
+        ]);
 
         if (!blogId)
             return res.status(400).send({ error: "blogId is required." });
