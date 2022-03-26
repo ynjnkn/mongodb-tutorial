@@ -9,6 +9,7 @@ const MONGODB_URI = "mongodb+srv://admin:dAX3uRtkdhUdqx4o@mongodb-tutorial.d7woi
 // Import Routers
 const { userRouter } = require("./routes/userRouter");
 const { blogRouter } = require("./routes/blogRouter");
+const { commentRouter } = require("./routes/commentRouter");
 
 const server = async () => {
     try {
@@ -21,6 +22,7 @@ const server = async () => {
         app.use(express.json());
         app.use("/users", userRouter);
         app.use("/blogs", blogRouter);
+        app.use("/blog/:blogId/comments", commentRouter);
 
         app.listen(3000, () => console.log("Server listening on port 3000"));
     }
