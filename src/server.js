@@ -7,9 +7,7 @@ const app = express();
 const MONGODB_URI = "mongodb+srv://admin:dAX3uRtkdhUdqx4o@mongodb-tutorial.d7woi.mongodb.net/BlogService?retryWrites=true&w=majority";
 
 // Import Routers
-const { userRouter } = require("./routes/userRouter");
-const { blogRouter } = require("./routes/blogRouter");
-const { commentRouter } = require("./routes/commentRouter");
+const { userRouter, blogRouter, commentRouter } = require("./routes");
 
 const server = async () => {
     try {

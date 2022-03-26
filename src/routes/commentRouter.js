@@ -1,9 +1,7 @@
 const { Router } = require("express");
 const commentRouter = Router({ mergeParams: true });
 const { isValidObjectId } = require("mongoose");
-const { Blog } = require("../models/Blog");
-const { User } = require("../models/User");
-const { Comment } = require("../models/Comment");
+const { Blog, User, Comment } = require("../models/");
 
 commentRouter.post("/", async (req, res) => {
     try {
