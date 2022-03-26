@@ -8,15 +8,43 @@ const { Comment } = require("../models/Comment");
 commentRouter.post("/", async (req, res) => {
     try {
         const { blogId } = req.params;
-        console.log("blogId", blogId);
+        const { content, userId } = req.body;
+        let blog = await Blog.findById(blogId);
+        let user = await User.findById(userId);
+
+        console.log("blog", blog);
+
+        if (!blogId)
+            return res.status(400).send({ error: "blogId is required." });
+        if (!isValidObjectId(blogId))
+            return res.status(400).send({ error: "The provided blogId is invalid." });
+        if (!blog)
+            return res.status(400).send({ error: "Blog is not found." });
+        if (!userId)
+            return res.status(400).send({ error: "userId is required." });
+        if (!isValidObjectId(userId))
+            return res.status(400).send({ error: "The provided userId is invalid." });
+        if (!user)
+            return res.status(400).send({ error: "User is not found" });
+        if (!content)
+            return res.status(400).send({ error: "Content is required." });
+        if (typeof (content) !== "string")
+            return res.status(400).send({ error: "Content must be a string." });
+        if (!blog.isLive)
+            return res.status(400).send({ error: "Blog is not available." });
+
+        let comment = new Comment({
+            content, user, blog,
+        });
+        await comment.save();
+
         res
             .status(200)
-            .send({ blogId });
+            .send({ comment });
     }
     catch (err) {
         console.log({ error: { name: err.name, message: err.message } });
-        res
-            .status(500)
+        res.status(500)
             .send({ error: { name: err.name, message: err.message } })
     }
 });
