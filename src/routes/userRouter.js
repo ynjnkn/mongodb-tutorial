@@ -48,7 +48,8 @@ userRouter.get("/", async (req, res) => {
 userRouter.get("/:userId", async (req, res) => {
     try {
         const { userId } = req.params;
-        if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ error: "invalid userId" }); const user = await User.findOne({ _id: userId });
+        if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ error: "invalid userId" });
+        const user = await User.findOne({ _id: userId });
         return res
             .status(200)
             .send({ user });
