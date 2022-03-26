@@ -38,26 +38,29 @@ commentRouter.post("/", async (req, res) => {
         });
         await comment.save();
 
-        res
+        return res
             .status(200)
             .send({ comment });
     }
     catch (err) {
         console.log({ error: { name: err.name, message: err.message } });
-        res.status(500)
+        return res
+            .status(500)
             .send({ error: { name: err.name, message: err.message } })
     }
 });
 
 commentRouter.get("/", async (req, res) => {
     try {
-        res
+        const { blogId } = req.params;
+        const comments = await Comment.find({ blog: blogId });
+        return res
             .status(200)
-            .send();
+            .send({ comments });
     }
     catch (err) {
         console.log({ error: { name: err.name, message: err.message } });
-        res
+        return res
             .status(500)
             .send({ error: { name: err.name, message: err.message } })
     }
