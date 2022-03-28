@@ -24,7 +24,7 @@ const server = async () => {
         app.use(express.json());
         app.use("/users", userRouter);
         app.use("/blogs", blogRouter);
-        app.use("/blog/:blogId/comments", commentRouter);
+        app.use("/blogs/:blogId/comments", commentRouter);
 
         app.listen(3000, () => console.log("Server listening on port 3000"));
     }
