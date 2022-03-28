@@ -23,22 +23,6 @@ const testAxios = async () => {
 
 const testPopulate = async () => {
     let { data: { blogs } } = await axios.get(`${SERVER_URI}/blogs`);
-    // blogs = await Promise.all(
-    // blogs.map(async blog => {
-    //     const [responseUser, responseComments] = await Promise.all([
-    //         await axios.get(`${SERVER_URI}/users/${blog.user}`),
-    //         await axios.get(`${SERVER_URI}/blogs/${blog._id}/comments`)
-    //     ]);
-    //     blog.user = responseUser.data.user;
-    //     blog.comments = await Promise.all(
-    //         responseComments.data.comments.map(async comment => {
-    //             const { data: { user } } = await axios.get(`${SERVER_URI}/users/${comment.user}`);
-    //             comment.user = user;
-    //             return comment;
-    //         }));
-    //     return blog;
-    // })
-    // );
 };
 
 const calculateTestAxiosLoadingTime = async () => {
@@ -59,7 +43,7 @@ const calculateTestAxiosLoadingTime = async () => {
 
 const calculateTestPopulateLoadingTime = async () => {
     console.log("calculateTestPopulateLoadingTime() 실행");
-    const numOfTests = 1;
+    const numOfTests = 5;
     let sumLoadingTime = 0;
     for (let i = 0; i < numOfTests; i++) {
         const loadingStart = performance.now();

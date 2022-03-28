@@ -43,7 +43,13 @@ blogRouter.get("/", async (req, res) => {
     try {
         const blogs = await Blog.find({})
             .limit(30)
-            .populate([{ path: "user" }]);
+            .populate([
+                { path: "user" },
+                {
+                    path: "comments",
+                    populate: { path: "user" }
+                },
+            ]);
         return res
             .status(200)
             .send({ blogs });
@@ -60,7 +66,14 @@ blogRouter.get("/:blogId", async (req, res) => {
     try {
         const { blogId } = req.params;
         if (!isValidObjectId(blogId)) return res.status(400).send({ error: "blogId is not valid." });
-        const blog = await Blog.findById(blogId);
+        const blog = await Blog.findById(blogId)
+        // .populate([
+        //     { path: "user" },
+        //     {
+        //         path: "comments",
+        //         populate: { path: "user" }
+        //     },
+        // ]);
         return res
             .status(200)
             .send({ blog });
