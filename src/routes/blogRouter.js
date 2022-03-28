@@ -14,7 +14,7 @@ blogRouter.post("/", async (req, res) => {
             return res.status(400).send({ error: "Content is required." });
         if (typeof (content) !== "string")
             return res.status(400).send({ error: "Content must be a string." });
-        if (isLive && isLive !== "boolean")
+        if (isLive && typeof(isLive) !== "boolean")
             return res.status(400).send({ error: "isLive must be a boolean." });
         if (!isValidObjectId(userId))
             return res.status(400).send({ error: "userId is invalid." });

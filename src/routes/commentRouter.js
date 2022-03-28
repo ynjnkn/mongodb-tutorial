@@ -34,7 +34,10 @@ commentRouter.post("/", async (req, res) => {
         let comment = new Comment({
             content, user, blog,
         });
-        await comment.save();
+        await Promise.all([
+            comment.save(),
+            Blog.updateOne({ _id: blogId }, { $push: { comments: comment } }), // 생성되는 comment가 속한 blog 객체에 내장 
+        ]);
 
         return res
             .status(200)

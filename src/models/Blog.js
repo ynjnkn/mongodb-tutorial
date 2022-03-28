@@ -1,4 +1,5 @@
 const { Schema, model, Types } = require("mongoose");
+const { commentSchema } = require("./Comment");
 
 const blogSchema = new Schema({
     title: {
@@ -15,19 +16,36 @@ const blogSchema = new Schema({
         default: false,
     },
     user: {
-        type: Types.ObjectId,
-        required: true,
-        ref: "user",
+        _id: {
+            type: Types.ObjectId,
+            required: true,
+            ref: "user",
+        },
+        username: {
+            type: String,
+            required: true,
+        },
+        name: {
+            first: {
+                type: String,
+                required: true,
+            },
+            last: {
+                type: String,
+                required: true,
+            },
+        },
     },
+    comments: [commentSchema],
 }, { timestamps: true });
 
-blogSchema.virtual("comments", {
-    ref: "comment",
-    localField: "_id",
-    foreignField: "blog",
-});
-blogSchema.set("toObject", { virtuals: true });
-blogSchema.set("toJSON", { virtuals: true });
+// blogSchema.virtual("comments", {
+//     ref: "comment",
+//     localField: "_id",
+//     foreignField: "blog",
+// });
+// blogSchema.set("toObject", { virtuals: true });
+// blogSchema.set("toJSON", { virtuals: true });
 
 const Blog = model("blog", blogSchema);
 module.exports = { Blog };
