@@ -32,6 +32,7 @@ const server = async () => {
                 console.log(`${i + 1}번째 generateFakeData() 실행`);
             };
             */
+            // await generateFakeData(3, 10, 50);
         });
     }
     catch (err) {

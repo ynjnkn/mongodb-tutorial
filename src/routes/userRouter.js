@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const userRouter = Router();
 const mongoose = require("mongoose");
-const { User } = require('../models/');
+const { User, Blog } = require('../models/');
 
 userRouter.post("/", async (req, res) => {
     try {
@@ -74,16 +74,32 @@ userRouter.put("/:userId", async (req, res) => {
         // 나머지 name, age, email에 대해서도 1) 해당 값들이 있는지 2) 데이터 타입이 올바른지 확인 필요                
 
         // let user = await User.findById(userId);
-        const user = await User.findOneAndUpdate({ _id: userId }, {
-            $set:
-            {
-                'username': username,
-                'name.first': firstName,
-                'name.last': lastName,
-                'age': age,
-                'email': email,
-            }
-        }, { new: true });
+        const [user] = await Promise.all([
+            User.findOneAndUpdate(
+                { _id: userId },
+                {
+                    'username': username,
+                    'name.first': firstName,
+                    'name.last': lastName,
+                    'age': age,
+                    'email': email,
+                },
+                { new: true }
+            ),
+            Blog.updateMany(
+                { "user._id": userId },
+                {
+                    "user.username": username,
+                    "user.name": name,
+                },
+            ),
+            Blog.updateMany(
+                {},
+                { "comments.$[comment].userFullName": `${firstName} ${lastName}` },
+                { arrayFilters: [{ "comment.user": userId }] }
+            ),
+        ]);
+
         return res
             .status(200)
             .send({ user });
