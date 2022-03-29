@@ -10,6 +10,10 @@ const commentSchema = new Schema({
         required: true,
         ref: "user",
     },
+    userFullName: {
+        type: String,
+        required: true
+    },
     blog: {
         type: ObjectId,
         required: true,

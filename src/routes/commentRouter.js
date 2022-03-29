@@ -32,7 +32,10 @@ commentRouter.post("/", async (req, res) => {
             return res.status(400).send({ error: "Blog is not available." });
 
         let comment = new Comment({
-            content, user, blog,
+            content,
+            user,
+            userFullName: `${user.name.first} ${user.name.last}`,
+            blog,
         });
         await Promise.all([
             comment.save(),
