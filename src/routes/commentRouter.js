@@ -70,4 +70,39 @@ commentRouter.get("/", async (req, res) => {
     }
 });
 
+commentRouter.patch("/:commentId", async (req, res) => {
+    try {
+        const { blogId, commentId } = req.params;
+        const { content } = req.body;
+        console.log(`blogId: ${blogId}`);
+        console.log(`commentId: ${commentId}`);
+
+        if (!content)
+            return res.status(400).send({ error: "Content is required." });
+        if (typeof (content) !== "string")
+            return res.status(400).send({ error: "Content must be a string." });
+
+        const [comment, blog] = await Promise.all([
+            Comment.findOneAndUpdate(
+                { _id: commentId },
+                { content },
+                { new: true },
+            ),
+            Blog.updateOne(
+                { "comments._id": commentId },
+                { "comments.$.content": content }
+            ),
+        ]);
+
+        return res
+            .status(200)
+            .send({ comment });
+    } catch (err) {
+        console.log({ error: { name: err.name, message: err.message } });
+        return res
+            .status(500)
+            .send({ error: { name: err.name, message: err.message } });
+    }
+})
+
 module.exports = { commentRouter };
