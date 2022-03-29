@@ -37,10 +37,10 @@ generateFakeData = async (userCount, blogsPerUser, commentsPerUser) => {
         users.map((user) => {
             for (let i = 0; i < blogsPerUser; i++) {
                 blogs.push(
-                    axios.post(`${URI}/blog`, {
+                    axios.post(`${URI}/blogs`, {
                         title: faker.lorem.words(),
                         content: faker.lorem.paragraphs(),
-                        islive: true,
+                        isLive: true,
                         userId: user.id,
                     })
                 );
@@ -54,9 +54,9 @@ generateFakeData = async (userCount, blogsPerUser, commentsPerUser) => {
             for (let i = 0; i < commentsPerUser; i++) {
                 let index = Math.floor(Math.random() * blogs.length);
                 comments.push(
-                    axios.post(`${URI}/blog/${newBlogs[index].data.blog._id}/comment`, {
+                    axios.post(`${URI}/blogs/${newBlogs[index].data.blog._id}/comments`, {
                         content: faker.lorem.sentence(),
-                        userId: user.id,
+                        userId: user._id,
                     })
                 );
             }
@@ -66,7 +66,12 @@ generateFakeData = async (userCount, blogsPerUser, commentsPerUser) => {
         console.log(`${comments.length} fake comments generated!`);
         console.log("COMPLETE!!");
     } catch (err) {
-        console.log(err);
+        console.log({
+            error: {
+                name: err.name,
+                message: err.message,
+            }
+        });
     }
 };
 
