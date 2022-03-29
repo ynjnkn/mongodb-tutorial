@@ -74,8 +74,6 @@ commentRouter.patch("/:commentId", async (req, res) => {
     try {
         const { blogId, commentId } = req.params;
         const { content } = req.body;
-        console.log(`blogId: ${blogId}`);
-        console.log(`commentId: ${commentId}`);
 
         if (!content)
             return res.status(400).send({ error: "Content is required." });
@@ -93,6 +91,31 @@ commentRouter.patch("/:commentId", async (req, res) => {
                 { "comments.$.content": content }
             ),
         ]);
+
+        return res
+            .status(200)
+            .send({ comment });
+    } catch (err) {
+        console.log({ error: { name: err.name, message: err.message } });
+        return res
+            .status(500)
+            .send({ error: { name: err.name, message: err.message } });
+    }
+})
+
+commentRouter.delete("/:commentId", async (req, res) => {
+    try {
+        const { blogId, commentId } = req.params;
+
+        const [comment] = await Promise.all([
+            Comment.findByIdAndDelete(commentId),
+            Blog.updateOne(
+                { "comments._id": commentId },
+                { $pull: { comments: { _id: commentId } } }),
+        ]);
+
+        if (!comment)
+            return res.status(400).send({ error: "The attempted comment is not found." });
 
         return res
             .status(200)

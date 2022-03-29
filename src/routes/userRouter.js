@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const userRouter = Router();
 const mongoose = require("mongoose");
-const { User, Blog } = require('../models/');
+const { User, Blog, Comment } = require('../models/');
 
 userRouter.post("/", async (req, res) => {
     try {
@@ -98,6 +98,10 @@ userRouter.put("/:userId", async (req, res) => {
                 { "comments.$[comment].userFullName": `${firstName} ${lastName}` },
                 { arrayFilters: [{ "comment.user": userId }] }
             ),
+            Comment.updateMany(
+                { "user": userId },
+                { "userFullName": `${firstName} ${lastName}` },
+            )
         ]);
 
         return res
