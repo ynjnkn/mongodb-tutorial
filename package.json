@@ -1,7 +1,6 @@
 {
   "name": "mongodb-tutorial",
   "version": "1.0.0",
-  "description": "",
   "main": "./src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -21,5 +20,14 @@
     "@faker-js/faker": "^6.0.0",
     "concurrently": "^7.0.0",
     "nodemon": "^2.0.15"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ynjnkn/mongodb-tutorial.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ynjnkn/mongodb-tutorial/issues"
+  },
+  "homepage": "https://github.com/ynjnkn/mongodb-tutorial#readme",
+  "description": ""
 }
