@@ -2,7 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const { generateFakeData } = require("../faker2");
+const { generateFakeData } = require("../faker_indexing");
 
 // Import DB
 const MONGODB_URI =
@@ -26,14 +26,7 @@ const server = async () => {
 
     app.listen(3000, async () => {
       console.log("Server listening on port 3000");
-      /*
-            // Create Fake Data
-            for (let i = 0; i < 20; i++) {
-                await generateFakeData(10, 1, 10); 
-                console.log(`${i + 1}번째 generateFakeData() 실행`);
-            };
-            */
-      // await generateFakeData(3, 10, 50);
+      //   await generateFakeData(100000, 3, 5);
     });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
