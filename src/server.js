@@ -1,8 +1,8 @@
 // Import Dependencies
 const express = require("express");
-const mongoose = require("mongoose");
 const app = express();
-const { generateFakeData } = require("../faker_indexing");
+const mongoose = require("mongoose");
+const { generateFakeData } = require("../faker2");
 
 // Import DB
 const MONGODB_URI =
@@ -26,11 +26,14 @@ const server = async () => {
 
     app.listen(3000, async () => {
       console.log("Server listening on port 3000");
-      //   await generateFakeData(100000, 3, 5);
+      //   for (let i = 0; i < 20; i++) {
+      //     await generateFakeData(100, 2, 2);
+      //     console.log(`generateFakeData() [${i + 1}/20]`);
+      //   }
     });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
   }
 };
-
+4;
 server();
