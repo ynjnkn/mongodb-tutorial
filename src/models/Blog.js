@@ -43,6 +43,7 @@ const blogSchema = new Schema(
 );
 
 blogSchema.index({ "user._id": 1, updateAt: 1 });
+blogSchema.index({ title: "text", content: "text" });
 
 // blogSchema.virtual("comments", {
 //     ref: "comment",
