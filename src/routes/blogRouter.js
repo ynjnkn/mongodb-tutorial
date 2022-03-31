@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const blogRouter = Router();
 const { isValidObjectId } = require("mongoose");
-const { Blog, User } = require("../models/");
+const { Blog, User, Comment } = require("../models/");
 
 blogRouter.post("/", async (req, res) => {
   try {
@@ -67,6 +67,7 @@ blogRouter.get("/:blogId", async (req, res) => {
     if (!isValidObjectId(blogId))
       return res.status(400).send({ error: "blogId is not valid." });
     const blog = await Blog.findById(blogId);
+    // const commentsCount = await Comment.find({ blog: blogId }).countDocuments();
     // .populate([
     //     { path: "user" },
     //     {

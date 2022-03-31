@@ -33,11 +33,20 @@ commentRouter.post("/", async (req, res) => {
       userFullName: `${user.name.first} ${user.name.last}`,
       blog,
     });
+
     // await Promise.all([
     //     comment.save(),
     //     Blog.updateOne({ _id: blogId }, { $push: { comments: comment } }), // 생성되는 comment가 속한 blog 객체에 내장
     // ]);
-    await comment.save();
+
+    await Promise.all([
+      comment.save(),
+      Blog.updateOne(
+        { _id: blogId },
+        { $inc: { commentsCount: 1 } },
+        { new: true }
+      ),
+    ]);
 
     return res.status(200).send({ comment });
   } catch (err) {
@@ -102,10 +111,11 @@ commentRouter.delete("/:commentId", async (req, res) => {
 
     const [comment] = await Promise.all([
       Comment.findByIdAndDelete(commentId),
-      Blog.updateOne(
-        { "comments._id": commentId },
-        { $pull: { comments: { _id: commentId } } }
-      ),
+      //   Blog.updateOne(
+      //     { "comments._id": commentId },
+      //     { $pull: { comments: { _id: commentId } } }
+      //   ),
+      Blog.updateOne({ _id: blogId }, { $inc: { commentsCount: -1 } }),
     ]);
 
     if (!comment)

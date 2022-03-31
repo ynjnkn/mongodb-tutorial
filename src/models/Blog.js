@@ -37,6 +37,11 @@ const blogSchema = new Schema(
         },
       },
     },
+    commentsCount: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
     // comments: [commentSchema],
   },
   { timestamps: true }
