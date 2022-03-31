@@ -31,7 +31,7 @@ commentRouter.post("/", async (req, res) => {
       content,
       user,
       userFullName: `${user.name.first} ${user.name.last}`,
-      blog,
+      blog: blogId,
     });
 
     // await Promise.all([
@@ -39,13 +39,20 @@ commentRouter.post("/", async (req, res) => {
     //     Blog.updateOne({ _id: blogId }, { $push: { comments: comment } }), // 생성되는 comment가 속한 blog 객체에 내장
     // ]);
 
+    blog.commentsCount++;
+    blog.comments.push(comment);
+    if (blog.commentsCount > 3) {
+      blog.comments.shift();
+    }
+
     await Promise.all([
       comment.save(),
-      Blog.updateOne(
-        { _id: blogId },
-        { $inc: { commentsCount: 1 } },
-        { new: true }
-      ),
+      blog.save(),
+      //   Blog.updateOne(
+      //     { _id: blogId },
+      //     { $inc: { commentsCount: 1 } },
+      //     { new: true }
+      //   ),
     ]);
 
     return res.status(200).send({ comment });

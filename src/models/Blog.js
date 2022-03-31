@@ -42,7 +42,7 @@ const blogSchema = new Schema(
       default: 0,
       required: true,
     },
-    // comments: [commentSchema],
+    comments: [commentSchema],
   },
   { timestamps: true }
 );
