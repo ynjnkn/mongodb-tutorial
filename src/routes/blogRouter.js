@@ -37,14 +37,14 @@ blogRouter.post("/", async (req, res) => {
 
 blogRouter.get("/", async (req, res) => {
   try {
-    let { page } = req.query;
+    let { page = 1 } = req.query;
     page = parseInt(page);
-    const numItemsPerPage = 3;
+    const numOfBlogsPerPage = 3;
 
     const blogs = await Blog.find({})
       .sort({ updatedAt: -1 })
-      .skip((page - 1) * numItemsPerPage)
-      .limit(numItemsPerPage);
+      .skip((page - 1) * numOfBlogsPerPage) // 1페이지부터 시작
+      .limit(numOfBlogsPerPage);
     // .populate([
     //     { path: "user" },
     //     {

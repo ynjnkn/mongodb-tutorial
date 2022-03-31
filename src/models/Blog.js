@@ -37,7 +37,7 @@ const blogSchema = new Schema(
         },
       },
     },
-    comments: [commentSchema],
+    // comments: [commentSchema],
   },
   { timestamps: true }
 );
