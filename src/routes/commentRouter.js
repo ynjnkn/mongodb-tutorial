@@ -4,66 +4,82 @@ const { isValidObjectId, startSession } = require("mongoose");
 const { Blog, User, Comment } = require("../models/");
 
 commentRouter.post("/", async (req, res) => {
-  const session = await startSession();
+  // const session = await startSession();
   try {
     let comment;
-    await session.withTransaction(async () => {
-      const { blogId } = req.params;
-      const { content, userId } = req.body;
-      const [blog, user] = await Promise.all([
-        Blog.findById(blogId, {}, { session }),
-        User.findById(userId, {}, { session }),
-      ]);
+    // await session.withTransaction(async () => {
+    const { blogId } = req.params;
+    const { content, userId } = req.body;
+    const [blog, user] = await Promise.all([
+      Blog.findById(blogId, {}, {}),
+      User.findById(userId, {}, {}),
+    ]);
+    // const [blog, user] = await Promise.all([
+    //   Blog.findById(blogId, {}, { session }),
+    //   User.findById(userId, {}, { session }),
+    // ]);
 
-      if (!blogId)
-        return res.status(400).send({ error: "blogId is required." });
-      if (!isValidObjectId(blogId))
-        return res
-          .status(400)
-          .send({ error: "The provided blogId is invalid." });
-      if (!blog) return res.status(400).send({ error: "Blog is not found." });
-      if (!userId)
-        return res.status(400).send({ error: "userId is required." });
-      if (!isValidObjectId(userId))
-        return res
-          .status(400)
-          .send({ error: "The provided userId is invalid." });
-      if (!user) return res.status(400).send({ error: "User is not found" });
-      if (!content)
-        return res.status(400).send({ error: "Content is required." });
-      if (typeof content !== "string")
-        return res.status(400).send({ error: "Content must be a string." });
-      if (!blog.isLive)
-        return res.status(400).send({ error: "Blog is not available." });
+    if (!blogId) return res.status(400).send({ error: "blogId is required." });
+    if (!isValidObjectId(blogId))
+      return res.status(400).send({ error: "The provided blogId is invalid." });
+    if (!blog) return res.status(400).send({ error: "Blog is not found." });
+    if (!userId) return res.status(400).send({ error: "userId is required." });
+    if (!isValidObjectId(userId))
+      return res.status(400).send({ error: "The provided userId is invalid." });
+    if (!user) return res.status(400).send({ error: "User is not found" });
+    if (!content)
+      return res.status(400).send({ error: "Content is required." });
+    if (typeof content !== "string")
+      return res.status(400).send({ error: "Content must be a string." });
+    if (!blog.isLive)
+      return res.status(400).send({ error: "Blog is not available." });
 
-      comment = new Comment({
-        content,
-        user,
-        userFullName: `${user.name.first} ${user.name.last}`,
-        blog: blogId,
-      });
-
-      // await Promise.all([
-      //     comment.save(),
-      //     Blog.updateOne({ _id: blogId }, { $push: { comments: comment } }), // 생성되는 comment가 속한 blog 객체에 내장
-      // ]);
-
-      blog.commentsCount++;
-      blog.comments.push(comment);
-      if (blog.commentsCount > 3) {
-        blog.comments.shift();
-      }
-
-      await Promise.all([
-        comment.save({ session }),
-        blog.save(),
-        //   Blog.updateOne(
-        //     { _id: blogId },
-        //     { $inc: { commentsCount: 1 } },
-        //     { new: true }
-        //   ),
-      ]);
+    comment = new Comment({
+      content,
+      user,
+      userFullName: `${user.name.first} ${user.name.last}`,
+      blog: blogId,
     });
+    //   await session.abortTransaction()
+
+    // await Promise.all([
+    //     comment.save(),
+    //     Blog.updateOne({ _id: blogId }, { $push: { comments: comment } }), // 생성되는 comment가 속한 blog 객체에 내장
+    // ]);
+
+    // 백엔드 서버에서 내장된 comments 수정
+    /*
+    blog.commentsCount++;
+    blog.comments.push(comment);
+    if (blog.commentsCount > 3) {
+      blog.comments.shift();
+    }
+
+    await Promise.all([
+      // comment.save({ session }),
+      comment.save(),
+      blog.save(),
+      //   Blog.updateOne(
+      //     { _id: blogId },
+      //     { $inc: { commentsCount: 1 } },
+      //     { new: true }
+      //   ),
+    ]);
+    */
+
+    // });
+
+    await Promise.all([
+      comment.save(),
+      Blog.updateOne(
+        { _id: blogId },
+        {
+          $inc: { commentsCount: 1 },
+          $push: { comments: { $each: [comment], $slice: -3 } },
+        }
+      ),
+    ]);
+
     return res.status(200).send({ comment });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
@@ -71,7 +87,7 @@ commentRouter.post("/", async (req, res) => {
       .status(500)
       .send({ error: { name: err.name, message: err.message } });
   } finally {
-    await session.endSession();
+    // await session.endSession();
   }
 });
 

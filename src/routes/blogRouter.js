@@ -17,7 +17,7 @@ blogRouter.post("/", async (req, res) => {
       return res.status(400).send({ error: "isLive must be a boolean." });
     if (!isValidObjectId(userId))
       return res.status(400).send({ error: "userId is invalid." });
-    let user = await User.findById(userId);
+    const user = await User.findById(userId);
     if (!user) return res.status(400).send({ error: "User is not found." });
 
     let blog = new Blog({

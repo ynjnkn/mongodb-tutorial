@@ -15,23 +15,14 @@ generateFakeData = async (userCount, blogsPerUser, commentsPerUser) => {
     let blogs = [];
     let comments = [];
 
+    // fake user 데이터 생성
     for (let i = 0; i < userCount; i++) {
       const firstName = faker.name.firstName();
       const lastName = faker.name.lastName();
       const userName = `${firstName.toLowerCase()}${lastName.toLowerCase()}${parseInt(
-        Math.random() * 100000000
+        Math.random() * 10000
       )}`;
       users.push(
-        // new User({
-        //   username:
-        //     faker.internet.userName() + parseInt(Math.random() * 100000000),
-        //   name: {
-        //     first: faker.name.firstName(),
-        //     last: faker.name.lastName(),
-        //   },
-        //   age: 10 + parseInt(Math.random() * 50),
-        //   email: faker.internet.email(),
-        // })
         new User({
           username: userName,
           name: {
@@ -49,6 +40,7 @@ generateFakeData = async (userCount, blogsPerUser, commentsPerUser) => {
     await User.insertMany(users);
     console.log(`${users.length} fake users generated!`);
 
+    // fake blog 데이터 생성
     users.map((user) => {
       for (let i = 0; i < blogsPerUser; i++) {
         blogs.push(
@@ -65,6 +57,7 @@ generateFakeData = async (userCount, blogsPerUser, commentsPerUser) => {
     let newBlogs = await Promise.all(blogs);
     console.log(`${newBlogs.length} fake blogs generated!`);
 
+    // fake comment 데이터 생성
     users.map((user) => {
       for (let i = 0; i < commentsPerUser; i++) {
         let index = Math.floor(Math.random() * blogs.length);
