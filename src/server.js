@@ -5,15 +5,18 @@ const mongoose = require("mongoose");
 const { generateFakeData } = require("../faker2");
 
 // Import DB
-const { MONGODB_URI } = process.env;
+const { MONGODB_URI, PORT } = process.env;
 
 // Import Routers
 const { userRouter, blogRouter, commentRouter } = require("./routes");
 
 const server = async () => {
   try {
+    // Check Environment Variables
+    if (!MONGODB_URI) throw new Error("MONGODB_URI is undefined.");
+    if (!PORT) throw new Error("PORT is required.");
+
     // Connect DB
-    if (!MONGODB_URI) throw new Error("MONGODB_URI is undefined");
     await mongoose.connect(MONGODB_URI);
     // mongoose.set("debug", true);
     console.log("MongoDB Connected");
@@ -24,8 +27,8 @@ const server = async () => {
     app.use("/blogs", blogRouter);
     app.use("/blogs/:blogId/comments", commentRouter);
 
-    app.listen(3000, async () => {
-      console.log("Server listening on port 3000");
+    app.listen(PORT, async () => {
+      console.log(`Server listening on port ${PORT}`);
       // console.time("generateFakeData() Elapsed Time");
       // await generateFakeData(10, 2, 10);
       // console.timeEnd("generateFakeData() Elapsed Time");
