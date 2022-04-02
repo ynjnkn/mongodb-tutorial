@@ -13,7 +13,7 @@ const { userRouter, blogRouter, commentRouter } = require("./routes");
 const server = async () => {
   try {
     // Check Environment Variables
-    if (!MONGODB_URI) throw new Error("MONGODB_URI is undefined.");
+    if (!MONGODB_URI) throw new Error("MONGODB_URI is invalid.");
     if (!PORT) throw new Error("PORT is required.");
 
     // Connect DB
