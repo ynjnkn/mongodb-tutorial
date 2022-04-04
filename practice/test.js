@@ -8,4 +8,4 @@ function accumulatedSum(a, b) {
     console.log("accumulatedSum", accumulatedSum);
 }
 
-accumulatedSum(0, 10);
+accumulatedSum(0, 100);
