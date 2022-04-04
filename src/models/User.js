@@ -1,4 +1,4 @@
-const {Schema, model} = require("mongoose");
+const { Schema, model } = require("mongoose");
 
 const userSchema = new Schema(
   {
@@ -8,7 +8,7 @@ const userSchema = new Schema(
       last: { type: String, required: true },
     },
     age: { type: Number },
-    email: { type: String, unique: true },
+    email: { type: String, required: true, unique: true },
   },
   { timestamps: true }
 );
