@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 
 // Routers
 const { userRouter } = require("./routes/userRouter");
+const { blogRouter } = require("./routes/blogRouter");
 
 // Environment Variables
 const { MONGODB_URI, PORT } = process.env;
@@ -23,6 +24,7 @@ const server = async () => {
     // Middlewares
     app.use(express.json());
     app.use("/users", userRouter);
+    app.use("/blogs", blogRouter);
 
     app.listen(PORT, async () => {
       console.log(`Server listening on Port ${PORT}`);
