@@ -7,16 +7,16 @@ const { User } = require("../models/User");
 
 // Exception Handlings
 const {
-  isExceptionCreateUser,
-  isExceptionReadAUser,
-  isExceptionPutAUser,
-  isExceptionDeleteAUser,
+  isCreateAUserException,
+  isReadAUserException,
+  isPutAUserException,
+  isDeleteAUserException,
 } = require("../exceptionHandlings/userExceptionHandlings");
 
 userRouter.post("/", async (req, res) => {
   try {
-    let { username, name, age, email } = req.body;
-    if (await isExceptionCreateUser(username, name, age, email, res)) {
+    const { username, name, age, email } = req.body;
+    if (await isCreateAUserException(username, name, age, email, res)) {
       return;
     }
     const user = new User(req.body);
@@ -45,7 +45,7 @@ userRouter.get("/", async (req, res) => {
 userRouter.get("/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    if (await isExceptionReadAUser(userId, res)) {
+    if (await isReadAUserException(userId, res)) {
       return;
     }
     const user = await User.findById(userId);
@@ -62,7 +62,7 @@ userRouter.put("/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const myNewUserInfo = req.body;
-    if (await isExceptionPutAUser(userId, myNewUserInfo, res)) {
+    if (await isPutAUserException(userId, myNewUserInfo, res)) {
       return;
     }
     const user = await User.findByIdAndUpdate(userId, myNewUserInfo, {
@@ -80,7 +80,7 @@ userRouter.put("/:userId", async (req, res) => {
 userRouter.delete("/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    if (await isExceptionDeleteAUser(userId, res)) {
+    if (await isDeleteAUserException(userId, res)) {
       return;
     }
     const user = await User.findByIdAndDelete(userId);

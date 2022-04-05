@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { User } = require("../models/User");
 
-const isExceptionCreateUser = async (username, name, age, email, res) => {
+const isCreateAUserException = async (username, name, age, email, res) => {
   // Check Username
   if (!username)
     return res.status(400).send({ error: "Username is required." });
@@ -37,7 +37,7 @@ const isExceptionCreateUser = async (username, name, age, email, res) => {
   return null;
 };
 
-const isExceptionReadAUser = async (userId, res) => {
+const isReadAUserException = async (userId, res) => {
   // Check ObjectId
   if (!mongoose.isValidObjectId(userId)) {
     return res.status(400).send({ error: "The provided ObjectId is invalid." });
@@ -50,7 +50,7 @@ const isExceptionReadAUser = async (userId, res) => {
   return null;
 };
 
-const isExceptionPutAUser = async (userId, myNewUserInfo, res) => {
+const isPutAUserException = async (userId, myNewUserInfo, res) => {
   // Check ObjectId - Valid ObjectId? [v]
   if (!mongoose.isValidObjectId(userId)) {
     return res.status(400).send({ error: "The provided User ID is invalid." });
@@ -118,7 +118,7 @@ const isExceptionPutAUser = async (userId, myNewUserInfo, res) => {
   return null;
 };
 
-const isExceptionDeleteAUser = async (userId, res) => {
+const isDeleteAUserException = async (userId, res) => {
   // Check ObjectId
   if (!mongoose.isValidObjectId(userId)) {
     return res.status(400).send({ error: "The provided ObjectId is invalid." });
@@ -132,8 +132,8 @@ const isExceptionDeleteAUser = async (userId, res) => {
 };
 
 module.exports = {
-  isExceptionCreateUser,
-  isExceptionReadAUser,
-  isExceptionPutAUser,
-  isExceptionDeleteAUser,
+  isCreateAUserException,
+  isReadAUserException,
+  isPutAUserException,
+  isDeleteAUserException,
 };
