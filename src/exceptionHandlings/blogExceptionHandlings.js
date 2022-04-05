@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+const { Blog } = require("../models/Blog");
 const { User } = require("../models/User");
 
-const isExceptionCreateABlog = async (title, content, isLive, userId, res) => {
+const isCreateABlogException = async (title, content, isLive, userId, res) => {
   if (!title) {
     return res.status(400).send({ error: "Title is required." });
   }
@@ -27,4 +28,54 @@ const isExceptionCreateABlog = async (title, content, isLive, userId, res) => {
   return null;
 };
 
-module.exports = { isExceptionCreateABlog };
+const isReadABlogException = async (blogId, res) => {
+  if (!mongoose.isValidObjectId(blogId)) {
+    return res.status(400).send({ error: "The provided ObjectId is invalid." });
+  }
+  const blog = await Blog.findById(blogId);
+  if (!blog) {
+    return res.status(400).send({ error: "Blog is not found." });
+  }
+  return null;
+};
+
+const isPutABlogException = async (blogId, title, content, res) => {
+  // Valid ObjectId?
+  if (!mongoose.isValidObjectId(blogId)) {
+    return res.status(400).send({ error: "The provided ObjectId is invalid." });
+  }
+  // Matched Blog?
+  const blog = await Blog.findById(blogId);
+  if (!blog) {
+    return res.status(400).send({ error: "Blog is not found." });
+  }
+  // Title String?
+  if (title && typeof title !== "string") {
+    return res.status(400).send({ error: "Title must be a string." });
+  }
+  // Content String?
+  if (content && typeof content !== "string") {
+    return res.status(400).send({ error: "Content must be a string." });
+  }
+  return null;
+};
+
+const isPatchABlogException = async (blogId, res) => {
+  // Valid ObjectId?
+  if (!mongoose.isValidObjectId(blogId)) {
+    return res.status(400).send({ error: "The provided ObjectId is invalid." });
+  }
+  // Matched Blog?
+  const blog = await Blog.findById(blogId);
+  if (!blog) {
+    return res.status(400).send({ error: "Blog is not found." });
+  }
+  return null;
+};
+
+module.exports = {
+  isCreateABlogException,
+  isReadABlogException,
+  isPutABlogException,
+  isPatchABlogException,
+};

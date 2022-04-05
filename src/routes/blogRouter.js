@@ -8,13 +8,16 @@ const { User } = require("../models/User");
 
 // Exception Handlings
 const {
-  isExceptionCreateABlog,
+  isCreateABlogException,
+  isReadABlogException,
+  isPutABlogException,
+  isPatchABlogException,
 } = require("../exceptionHandlings/blogExceptionHandlings");
 
 blogRouter.post("/", async (req, res) => {
   try {
     const { title, content, isLive, userId } = req.body;
-    if (await isExceptionCreateABlog(title, content, isLive, userId, res)) {
+    if (await isCreateABlogException(title, content, isLive, userId, res)) {
       return;
     }
     const user = await User.findById(userId);
@@ -31,7 +34,8 @@ blogRouter.post("/", async (req, res) => {
 
 blogRouter.get("/", async (req, res) => {
   try {
-    return res.status(200).send();
+    const blogs = await Blog.find({});
+    return res.status(200).send({ blogs });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
     return res
@@ -42,7 +46,12 @@ blogRouter.get("/", async (req, res) => {
 
 blogRouter.get("/:blogId", async (req, res) => {
   try {
-    return res.status(200).send();
+    const { blogId } = req.params;
+    if (await isReadABlogException(blogId, res)) {
+      return;
+    }
+    const blog = await Blog.findById(blogId);
+    return res.status(200).send({ blog });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
     return res
@@ -53,7 +62,17 @@ blogRouter.get("/:blogId", async (req, res) => {
 
 blogRouter.put("/:blogId", async (req, res) => {
   try {
-    return res.status(200).send();
+    const { blogId } = req.params;
+    const { title, content } = req.body;
+    if (await isPutABlogException(blogId, title, content, res)) {
+      return;
+    }
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      { title, content },
+      { new: true }
+    );
+    return res.status(200).send({ blog });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
     return res
@@ -64,7 +83,18 @@ blogRouter.put("/:blogId", async (req, res) => {
 
 blogRouter.patch("/:blogId/live", async (req, res) => {
   try {
-    return res.status(200).send();
+    const { blogId } = req.params;
+    if (await isPatchABlogException(blogId, res)) {
+      return;
+    }
+    let blog = await Blog.findById(blogId);
+    if (blog.isLive === true) {
+      blog.isLive = false;
+    } else {
+      blog.isLive = true;
+    }
+    await blog.save();
+    return res.status(200).send({ blog });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
     return res

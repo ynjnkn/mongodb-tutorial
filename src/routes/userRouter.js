@@ -16,6 +16,7 @@ const {
 userRouter.post("/", async (req, res) => {
   try {
     const { username, name, age, email } = req.body;
+    await isCreateAUserException(username, name, age, email, res);
     if (await isCreateAUserException(username, name, age, email, res)) {
       return;
     }
