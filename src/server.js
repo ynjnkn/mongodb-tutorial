@@ -17,6 +17,7 @@ const server = async () => {
 
     // Connect DB
     await mongoose.connect(MONGODB_URI);
+    mongoose.set("debug", false);
     console.log("MongoDB Connected");
 
     // Middlewares
