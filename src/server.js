@@ -9,6 +9,9 @@ const { userRouter, blogRouter, commentRouter } = require("./routes");
 // Environment Variables
 const { MONGODB_URI, PORT } = process.env;
 
+// Faker
+const { generateFakeData } = require("./faker/fakerNoAxios");
+
 const server = async () => {
   try {
     // Check Environment Variables
@@ -28,6 +31,9 @@ const server = async () => {
 
     app.listen(PORT, async () => {
       console.log(`Server listening on Port ${PORT}`);
+      // console.time("generateFakeData() Loading Time");
+      // await generateFakeData(100, 10, 300);
+      // console.timeEnd("generateFakeData() Loading Time");
     });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
