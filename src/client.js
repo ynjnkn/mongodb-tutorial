@@ -40,12 +40,12 @@ const getBlogsWithPopulate = async () => {
   let {
     data: { blogs },
   } = await axios.get(`${DEV_SERVER_URI}/blogs`);
-  console.dir(blogs[0], { depth: 5 });
+  //   console.dir(blogs[0], { depth: 5 });
 };
 
 const getBlogsWithPopulateLoadingTimeTest = async () => {
   console.log("getBlogsWithPopulateLoadingTimeTest() 실행");
-  const numOfTests = 10;
+  const numOfTests = 30;
   let sumLoadingTime = 0;
   for (let i = 0; i < numOfTests; i++) {
     const loadingStart = performance.now();
@@ -59,5 +59,5 @@ const getBlogsWithPopulateLoadingTimeTest = async () => {
   console.log({ avgLoadingTime });
 };
 
-getBlogsWithPopulate();
-// getBlogsWithPopulateLoadingTimeTest();
+// getBlogsWithPopulate();
+getBlogsWithPopulateLoadingTimeTest();
