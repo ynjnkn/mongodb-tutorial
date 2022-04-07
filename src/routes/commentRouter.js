@@ -10,6 +10,7 @@ const { Comment } = require("../models/Comment");
 // Exception Handlings
 const {
   isPostACommentException,
+  isReadAllCommentsExceptions,
 } = require("../exceptionHandlings/commentExecptionHandlings");
 
 commentRouter.post("/", async (req, res) => {
@@ -40,7 +41,12 @@ commentRouter.post("/", async (req, res) => {
 
 commentRouter.get("/", async (req, res) => {
   try {
-    res.status(200).send();
+    const { blogId } = req.params;
+    if (await isReadAllCommentsExceptions(blogId, res)) {
+      return;
+    }
+    const comments = await Comment.find({ blog: blogId });
+    res.status(200).send({ comments });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
     return res

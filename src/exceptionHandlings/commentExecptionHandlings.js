@@ -44,6 +44,17 @@ const isPostACommentException = async (blogId, userId, content, res) => {
   if (blog.isLive !== true) {
     return res.status(400).send({ error: "Blog is not live." });
   }
+  return null;
 };
 
-module.exports = { isPostACommentException };
+const isReadAllCommentsExceptions = async (blogId, res) => {
+  // valid blogId?
+  if (!mongoose.isValidObjectId(blogId)) {
+    return res.status(400).send({ error: "The provided blogId is invalid." });
+  }
+  // matched blog?
+  // matched blog가 없다면 해당 API가 존재할 필요도 없음 => 예외처리 불필요
+  return null;
+};
+
+module.exports = { isPostACommentException, isReadAllCommentsExceptions };
