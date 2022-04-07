@@ -4,7 +4,7 @@ const axios = require("axios");
 // Environment Variables
 const { DEV_SERVER_URI } = process.env;
 
-const test = async () => {
+const getBlogsWithAxios = async () => {
   let {
     data: { blogs },
   } = await axios.get(`${DEV_SERVER_URI}/blogs`);
@@ -36,4 +36,26 @@ const test = async () => {
   console.dir({ "변경 후": blogs[0] }, { depth: 10 });
 };
 
-test();
+const getBlogsWithPopulate = async () => {
+  let {
+    data: { blogs },
+  } = await axios.get(`${DEV_SERVER_URI}/blogs`);
+};
+
+const getBlogsWithPopulateLoadingTimeTest = async () => {
+  console.log("getBlogsWithPopulateLoadingTimeTest() 실행");
+  const numOfTests = 10;
+  let sumLoadingTime = 0;
+  for (let i = 0; i < numOfTests; i++) {
+    const loadingStart = performance.now();
+    await getBlogsWithPopulate();
+    const loadingEnd = performance.now();
+    const loadingTime = loadingEnd - loadingStart;
+    sumLoadingTime += loadingTime;
+    console.log(`${i + 1}번째 로딩 타임: ${loadingTime}ms`);
+  }
+  const avgLoadingTime = sumLoadingTime / numOfTests;
+  console.log({ avgLoadingTime });
+};
+
+getBlogsWithPopulateLoadingTimeTest();
