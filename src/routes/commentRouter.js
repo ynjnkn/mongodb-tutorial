@@ -43,7 +43,7 @@ commentRouter.get("/", async (req, res) => {
     if (await isReadAllCommentsExceptions(blogId, res)) {
       return;
     }
-    const comments = await Comment.find({ blog: blogId });
+    const comments = await Comment.find({ blog: blogId }).limit(3);
     res.status(200).send({ comments });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
