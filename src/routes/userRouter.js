@@ -7,7 +7,7 @@ const { User } = require("../models/User");
 
 // Exception Handlings
 const {
-  isCreateAUserException,
+  isPostAUserException,
   isReadAUserException,
   isPutAUserException,
   isDeleteAUserException,
@@ -16,8 +16,7 @@ const {
 userRouter.post("/", async (req, res) => {
   try {
     const { username, name, age, email } = req.body;
-    await isCreateAUserException(username, name, age, email, res);
-    if (await isCreateAUserException(username, name, age, email, res)) {
+    if (await isPostAUserException(username, name, age, email, res)) {
       return;
     }
     const user = new User(req.body);

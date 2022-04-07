@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { User } = require("../models/User");
 
-const isCreateAUserException = async (username, name, age, email, res) => {
+const isPostAUserException = async (username, name, age, email, res) => {
   // Check Username
   if (!username)
     return res.status(400).send({ error: "Username is required." });
@@ -132,7 +132,7 @@ const isDeleteAUserException = async (userId, res) => {
 };
 
 module.exports = {
-  isCreateAUserException,
+  isPostAUserException,
   isReadAUserException,
   isPutAUserException,
   isDeleteAUserException,

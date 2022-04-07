@@ -1,8 +1,11 @@
+// Dependencies
 const mongoose = require("mongoose");
-const { Blog } = require("../models/Blog");
-const { User } = require("../models/User");
 
-const isCreateABlogException = async (title, content, isLive, userId, res) => {
+// Models
+const { User } = require("../models/User");
+const { Blog } = require("../models/Blog");
+
+const isPostABlogException = async (title, content, isLive, userId, res) => {
   if (!title) {
     return res.status(400).send({ error: "Title is required." });
   }
@@ -74,7 +77,7 @@ const isPatchABlogException = async (blogId, res) => {
 };
 
 module.exports = {
-  isCreateABlogException,
+  isPostABlogException,
   isReadABlogException,
   isPutABlogException,
   isPatchABlogException,

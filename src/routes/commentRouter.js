@@ -5,13 +5,31 @@ const commentRouter = Router({ mergeParams: true });
 // Models
 const { Blog } = require("../models/Blog");
 const { User } = require("../models/User");
+const { Comment } = require("../models/Comment");
 
 // Exception Handlings
+const {
+  isPostACommentException,
+} = require("../exceptionHandlings/commentExecptionHandlings");
 
 commentRouter.post("/", async (req, res) => {
   try {
     const { blogId } = req.params;
-    res.status(200).send();
+    const { content, userId } = req.body;
+    if (await isPostACommentException(blogId, userId, content, res)) {
+      return;
+    }
+    const [user, blog] = await Promise.all([
+      User.findById(userId),
+      Blog.findById(blogId),
+    ]);
+    let comment = new Comment({
+      content,
+      user,
+      blog,
+    });
+    await comment.save();
+    res.status(200).send({ comment });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
     return res

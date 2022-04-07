@@ -8,7 +8,7 @@ const { User } = require("../models/User");
 
 // Exception Handlings
 const {
-  isCreateABlogException,
+  isPostABlogException,
   isReadABlogException,
   isPutABlogException,
   isPatchABlogException,
@@ -17,7 +17,7 @@ const {
 blogRouter.post("/", async (req, res) => {
   try {
     const { title, content, isLive, userId } = req.body;
-    if (await isCreateABlogException(title, content, isLive, userId, res)) {
+    if (await isPostABlogException(title, content, isLive, userId, res)) {
       return;
     }
     const user = await User.findById(userId);
