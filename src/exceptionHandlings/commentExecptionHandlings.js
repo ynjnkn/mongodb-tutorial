@@ -2,8 +2,7 @@
 const mongoose = require("mongoose");
 
 // Models
-const { User } = require("../models/User");
-const { Blog } = require("../models/Blog");
+const { User, Blog } = require("../models");
 
 const isPostACommentException = async (blogId, userId, content, res) => {
   // blogId?

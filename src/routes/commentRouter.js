@@ -3,9 +3,7 @@ const { Router } = require("express");
 const commentRouter = Router({ mergeParams: true });
 
 // Models
-const { Blog } = require("../models/Blog");
-const { User } = require("../models/User");
-const { Comment } = require("../models/Comment");
+const { User, Blog, Comment } = require("../models");
 
 // Exception Handlings
 const {

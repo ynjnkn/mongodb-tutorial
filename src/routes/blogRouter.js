@@ -3,8 +3,7 @@ const { Router } = require("express");
 const blogRouter = Router();
 
 // Models
-const { Blog } = require("../models/Blog");
-const { User } = require("../models/User");
+const { User, Blog } = require("../models");
 
 // Exception Handlings
 const {

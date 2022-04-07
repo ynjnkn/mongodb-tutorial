@@ -2,8 +2,7 @@
 const mongoose = require("mongoose");
 
 // Models
-const { User } = require("../models/User");
-const { Blog } = require("../models/Blog");
+const { User, Blog } = require("../models");
 
 const isPostABlogException = async (title, content, isLive, userId, res) => {
   if (!title) {

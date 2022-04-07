@@ -4,9 +4,7 @@ const app = express();
 const mongoose = require("mongoose");
 
 // Routers
-const { userRouter } = require("./routes/userRouter");
-const { blogRouter } = require("./routes/blogRouter");
-const { commentRouter } = require("./routes/commentRouter");
+const { userRouter, blogRouter, commentRouter } = require("./routes");
 
 // Environment Variables
 const { MONGODB_URI, PORT } = process.env;
