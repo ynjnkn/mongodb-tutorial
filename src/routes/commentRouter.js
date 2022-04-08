@@ -9,6 +9,7 @@ const { User, Blog, Comment } = require("../models");
 const {
   isPostACommentException,
   isReadAllCommentsExceptions,
+  isPatchACommentException,
 } = require("../exceptionHandlings/commentExecptionHandlings");
 
 commentRouter.post("/", async (req, res) => {
@@ -61,9 +62,22 @@ commentRouter.get("/", async (req, res) => {
   }
 });
 
-commentRouter.patch("/", async (req, res) => {
+commentRouter.patch("/:commentId", async (req, res) => {
   try {
-    res.status(200).send();
+    const { blogId, commentId } = req.params;
+    const { content } = req.body;
+    if (await isPatchACommentException(content, res)) {
+      return;
+    }
+    const [comment, blog] = await Promise.all([
+      Comment.findByIdAndUpdate(commentId, { content }, { new: true }),
+      Blog.findOneAndUpdate(
+        { "comments._id": commentId },
+        { "comments.$.content": content },
+        {}
+      ),
+    ]);
+    res.status(200).send({ comment });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
     return res

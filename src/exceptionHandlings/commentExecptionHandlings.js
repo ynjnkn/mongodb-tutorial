@@ -56,4 +56,20 @@ const isReadAllCommentsExceptions = async (blogId, res) => {
   return null;
 };
 
-module.exports = { isPostACommentException, isReadAllCommentsExceptions };
+const isPatchACommentException = async (content, res) => {
+  // content?
+  if (!content) {
+    return res.status(400).send({ error: "Content is required." });
+  }
+  // content string?
+  if (typeof content !== "string") {
+    return res.status(400).send({ error: "Content must be a string." });
+  }
+  return null;
+};
+
+module.exports = {
+  isPostACommentException,
+  isReadAllCommentsExceptions,
+  isPatchACommentException,
+};
