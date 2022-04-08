@@ -33,7 +33,11 @@ const server = async () => {
     app.listen(PORT, async () => {
       console.log(`Server listening on Port ${PORT}`);
       // console.time("generateFakeData() Loading Time");
-      // await generateFakeData(2, 10, 10);
+      // const numOfLoops = 20;
+      // for (let i = 0; i < numOfLoops; i++) {
+      //   await generateFakeData(10, 1, 10);
+      //   console.log(`[${i + 1}/${numOfLoops}] generateFakeData() 실행`);
+      // }
       // console.timeEnd("generateFakeData() Loading Time");
     });
   } catch (err) {
