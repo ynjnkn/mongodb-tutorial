@@ -25,6 +25,7 @@ commentRouter.post("/", async (req, res) => {
     let comment = new Comment({
       content,
       user,
+      userFullName: `${user.name.first} ${user.name.last}`,
       blog,
     });
     await Promise.all([
