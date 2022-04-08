@@ -60,4 +60,4 @@ const getBlogsWithPopulateLoadingTimeTest = async () => {
 };
 
 // getBlogsWithPopulate();
-getBlogsWithPopulateLoadingTimeTest();
+// getBlogsWithPopulateLoadingTimeTest();

@@ -27,7 +27,14 @@ commentRouter.post("/", async (req, res) => {
       user,
       blog,
     });
-    await comment.save();
+    await Promise.all([
+      comment.save(),
+      Blog.findOneAndUpdate(
+        { _id: blogId },
+        { $push: { comments: comment } },
+        {}
+      ),
+    ]);
     res.status(200).send({ comment });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
