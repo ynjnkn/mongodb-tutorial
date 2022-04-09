@@ -10,6 +10,7 @@ const {
   isPostACommentException,
   isReadAllCommentsExceptions,
   isPatchACommentException,
+  isDeleteACommentException,
 } = require("../exceptionHandlings/commentExecptionHandlings");
 
 commentRouter.post("/", async (req, res) => {
@@ -86,9 +87,21 @@ commentRouter.patch("/:commentId", async (req, res) => {
   }
 });
 
-commentRouter.delete("/", async (req, res) => {
+commentRouter.delete("/:commentId", async (req, res) => {
   try {
-    res.status(200).send();
+    const { commentId } = req.params;
+    if (await isDeleteACommentException(commentId, res)) {
+      return;
+    }
+    const [comment] = await Promise.all([
+      Comment.findByIdAndDelete(commentId),
+      Blog.findOneAndUpdate(
+        { "comments._id": commentId },
+        { $pull: { comments: { _id: commentId } } },
+        {}
+      ),
+    ]);
+    res.status(200).send({ comment });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
     return res

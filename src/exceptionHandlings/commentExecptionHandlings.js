@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 
 // Models
-const { User, Blog } = require("../models");
+const { User, Blog, Comment } = require("../models");
 
 const isPostACommentException = async (blogId, userId, content, res) => {
   // blogId?
@@ -68,8 +68,24 @@ const isPatchACommentException = async (content, res) => {
   return null;
 };
 
+const isDeleteACommentException = async (commentId, res) => {
+  // valid commentId?
+  if (!mongoose.isValidObjectId(commentId)) {
+    return res
+      .status(400)
+      .send({ error: "The provided commentId is invalid." });
+  }
+  // matched comment?
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    return res.status(400).send({ error: "Comment is not found." });
+  }
+  return null;
+};
+
 module.exports = {
   isPostACommentException,
   isReadAllCommentsExceptions,
   isPatchACommentException,
+  isDeleteACommentException,
 };
