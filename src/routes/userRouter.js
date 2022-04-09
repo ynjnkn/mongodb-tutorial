@@ -3,7 +3,7 @@ const { Router } = require("express");
 const userRouter = Router();
 
 // Models
-const { User } = require("../models");
+const { User, Blog, Comment } = require("../models");
 
 // Exception Handlings
 const {
@@ -62,12 +62,41 @@ userRouter.put("/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const myNewUserInfo = req.body;
+    const { username, name, age, email } = myNewUserInfo;
+    let firstName, lastName;
+    if (name) {
+      [firstName, lastName] = [name.first, name.last];
+    }
     if (await isPutAUserException(userId, myNewUserInfo, res)) {
       return;
     }
-    const user = await User.findByIdAndUpdate(userId, myNewUserInfo, {
-      new: true,
-    });
+    const [user] = await Promise.all([
+      // User 업데이트
+      User.findByIdAndUpdate(userId, myNewUserInfo, {
+        new: true,
+      }),
+      // Blog 업데이트 (username, name)
+      Blog.updateMany(
+        { "user._id": userId },
+        {
+          "user.username": username,
+          "user.name": name,
+        },
+        {}
+      ),
+      // Blog의 Comment 업데이트 (userFullName)
+      Blog.updateMany(
+        {},
+        { "comments.$[comment].userFullName": `${firstName} ${lastName}` },
+        { arrayFilters: [{ "comment.user": userId }] }
+      ),
+      // Comment 업데이트 (userFullName)
+      Comment.updateMany(
+        { user: userId },
+        { userFullName: `${firstName} ${lastName}` },
+        {}
+      ),
+    ]);
     return res.status(200).send({ user });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });

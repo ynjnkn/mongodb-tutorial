@@ -19,7 +19,7 @@ const server = async () => {
     if (!MONGODB_URI) throw new Error("MONGODB_URI is undefined");
     if (!PORT) throw new Error("PORT is undefined");
 
-    // Connect DB
+    // Connect MongoDB
     await mongoose.connect(MONGODB_URI);
     mongoose.set("debug", false);
     console.log("MongoDB Connected");
@@ -32,13 +32,15 @@ const server = async () => {
 
     app.listen(PORT, async () => {
       console.log(`Server listening on Port ${PORT}`);
-      // console.time("generateFakeData() Loading Time");
-      // const numOfLoops = 20;
-      // for (let i = 0; i < numOfLoops; i++) {
-      //   await generateFakeData(10, 1, 10);
-      //   console.log(`[${i + 1}/${numOfLoops}] generateFakeData() 실행`);
-      // }
-      // console.timeEnd("generateFakeData() Loading Time");
+      /*
+      console.time("Data Generation Loading Time");
+      const numOfLoops = 1;
+      for (let i = 0; i < numOfLoops; i++) {
+        await generateFakeData(2, 3, 20);
+        console.log(`[${i + 1}/${numOfLoops}] generateFakeData() 실행`);
+      }
+      console.timeEnd("Data Generation Loading Time");
+      */
     });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });

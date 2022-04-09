@@ -80,8 +80,7 @@ const isPutAUserException = async (userId, myNewUserInfo, res) => {
   }
   // Check Name - Type String? [v]
   if (
-    myNewUserInfo.name.first &&
-    myNewUserInfo.name.last &&
+    myNewUserInfo.name &&
     (typeof myNewUserInfo.name.first !== "string" ||
       typeof myNewUserInfo.name.last !== "string")
   ) {
