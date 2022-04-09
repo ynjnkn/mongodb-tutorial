@@ -112,7 +112,17 @@ userRouter.delete("/:userId", async (req, res) => {
     if (await isDeleteAUserException(userId, res)) {
       return;
     }
-    const user = await User.findByIdAndDelete(userId);
+    const [user] = await Promise.all([
+      User.findByIdAndDelete(userId),
+      Blog.deleteMany({ "user._id": userId }),
+      Blog.updateMany(
+        { "comments.user": userId },
+        { $pull: { comments: { user: userId } } },
+        {}
+      ),
+      Comment.deleteMany({ user: userId }),
+    ]);
+
     return res.status(200).send({ user });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
