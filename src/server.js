@@ -35,13 +35,13 @@ const server = async () => {
       console.log(`Server listening on Port ${PORT}`);
       /*
       console.time("Data Generation Loading Time");
-      const numOfLoops = 3;
+      const numOfLoops = 1;
       for (let i = 0; i < numOfLoops; i++) {
-        await generateFakeData(5, 3, 20);
+        await generateFakeData(10, 10, 20);
         console.log(`[${i + 1}/${numOfLoops}] generateFakeData() 실행`);
       }
       console.timeEnd("Data Generation Loading Time");
-      */
+      //*/
     });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });

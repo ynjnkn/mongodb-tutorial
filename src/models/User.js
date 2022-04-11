@@ -7,7 +7,7 @@ const userSchema = new Schema(
       first: { type: String, required: true },
       last: { type: String, required: true },
     },
-    age: { type: Number },
+    age: { type: Number, index: true },
     email: { type: String, required: true, unique: true },
   },
   { timestamps: true }

@@ -12,7 +12,7 @@ const blogSchema = new Schema(
     content: { type: String, required: true },
     isLive: { type: Boolean, required: false, default: false },
     user: {
-      _id: { type: ObjectId, required: true, ref: "user" },
+      _id: { type: ObjectId, required: true, ref: "user", index: true },
       username: { type: String, required: true },
       name: {
         first: { type: String, required: true },
@@ -23,6 +23,8 @@ const blogSchema = new Schema(
   },
   { timestamps: true }
 );
+
+blogSchema.index({ "user._id": 1, updatedAt: 1 });
 
 /*
 // blogSchema에 comments 키가 있으므로 virtual이 필요 없음
