@@ -38,7 +38,14 @@ commentRouter.post("/", async (req, res) => {
     //     {}
     //   ),
     // ]);
-    await comment.save();
+    await Promise.all([
+      comment.save(),
+      Blog.updateOne(
+        { _id: blogId },
+        { $inc: { commentsCount: 1 } },
+        { new: true }
+      ),
+    ]);
     res.status(200).send({ comment });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
@@ -96,15 +103,15 @@ commentRouter.patch("/:commentId", async (req, res) => {
 
 commentRouter.delete("/:commentId", async (req, res) => {
   try {
-    const { commentId } = req.params;
+    const { blogId, commentId } = req.params;
     if (await isDeleteACommentException(commentId, res)) {
       return;
     }
     const [comment] = await Promise.all([
       Comment.findByIdAndDelete(commentId),
       Blog.findOneAndUpdate(
-        { "comments._id": commentId },
-        { $pull: { comments: { _id: commentId } } },
+        { _id: blogId },
+        { $inc: { commentsCount: -1 } },
         {}
       ),
     ]);

@@ -3,7 +3,7 @@ const { Router } = require("express");
 const blogRouter = Router();
 
 // Models
-const { User, Blog } = require("../models");
+const { User, Blog, Comment } = require("../models");
 
 // Exception Handlings
 const {
@@ -37,10 +37,19 @@ blogRouter.get("/", async (req, res) => {
     if (!page) throw new Error("Page is not defined for pagination.");
     page = parseInt(page);
     const numOfBlogsPerPage = 3;
-    const blogs = await Blog.find({})
+    let blogs = await Blog.find({})
       .sort({ updatedAt: -1 })
       .skip((page - 1) * numOfBlogsPerPage)
       .limit(numOfBlogsPerPage);
+    blogs = await Promise.all(
+      blogs.map(async (blog) => {
+        blog = blog.toObject();
+        const commentCount = await Comment.find({
+          blog: blog._id,
+        }).countDocuments();
+        return { ...blog, commentCount: commentCount };
+      })
+    );
     return res.status(200).send({ blogs });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
@@ -57,6 +66,8 @@ blogRouter.get("/:blogId", async (req, res) => {
       return;
     }
     const blog = await Blog.findById(blogId);
+    // const commentCount = await Comment.find({ blog: blogId }).countDocuments();
+    // return res.status(200).send({ blog, commentCount });
     return res.status(200).send({ blog });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
