@@ -10,8 +10,9 @@ const { userRouter, blogRouter, commentRouter } = require("./routes");
 const { MONGODB_URI, PORT } = process.env;
 
 // Faker
-const { generateFakeData } = require("./faker/fakerAxios");
-// const { generateFakeData } = require("./faker/fakerNoAxios");
+const { generateFakeData } = require("./faker/createUsersBlogsCommentsAxios");
+// const { generateFakeData } = require("./faker/createUsersBlogsCommentsNoAxios");
+// const { generateFakeData } = require("./faker/createUsersNoAxios");
 
 const server = async () => {
   try {
@@ -34,9 +35,9 @@ const server = async () => {
       console.log(`Server listening on Port ${PORT}`);
       /*
       console.time("Data Generation Loading Time");
-      const numOfLoops = 1;
+      const numOfLoops = 3;
       for (let i = 0; i < numOfLoops; i++) {
-        await generateFakeData(2, 3, 20);
+        await generateFakeData(5, 3, 20);
         console.log(`[${i + 1}/${numOfLoops}] generateFakeData() 실행`);
       }
       console.timeEnd("Data Generation Loading Time");

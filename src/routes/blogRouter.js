@@ -33,15 +33,13 @@ blogRouter.post("/", async (req, res) => {
 
 blogRouter.get("/", async (req, res) => {
   try {
+    let { page } = req.query;
+    page = parseInt(page);
+    const numOfBlogsPerPage = 3;
     const blogs = await Blog.find({})
-      .limit(30)
-      .populate([
-        { path: "user" },
-        {
-          path: "comments",
-          populate: { path: "user" },
-        },
-      ]);
+      .sort({ updatedAt: -1 })
+      .skip((page - 1) * numOfBlogsPerPage)
+      .limit(numOfBlogsPerPage);
     return res.status(200).send({ blogs });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
