@@ -30,14 +30,15 @@ commentRouter.post("/", async (req, res) => {
       userFullName: `${user.name.first} ${user.name.last}`,
       blog,
     });
-    await Promise.all([
-      comment.save(),
-      Blog.findOneAndUpdate(
-        { _id: blogId },
-        { $push: { comments: comment } },
-        {}
-      ),
-    ]);
+    // await Promise.all([
+    //   comment.save(),
+    //   Blog.findOneAndUpdate(
+    //     { _id: blogId },
+    //     { $push: { comments: comment } },
+    //     {}
+    //   ),
+    // ]);
+    await comment.save();
     res.status(200).send({ comment });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
@@ -50,10 +51,16 @@ commentRouter.post("/", async (req, res) => {
 commentRouter.get("/", async (req, res) => {
   try {
     const { blogId } = req.params;
+    let { page = 1 } = req.query;
+    if (!page) throw new Error("Page is not defined for pagination.");
+    const numOfCommentsPerPage = 3;
     if (await isReadAllCommentsExceptions(blogId, res)) {
       return;
     }
-    const comments = await Comment.find({ blog: blogId }).limit(20);
+    const comments = await Comment.find({ blog: blogId })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * numOfCommentsPerPage)
+      .limit(numOfCommentsPerPage);
     res.status(200).send({ comments });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });

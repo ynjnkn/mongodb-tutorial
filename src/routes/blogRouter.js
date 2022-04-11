@@ -33,7 +33,8 @@ blogRouter.post("/", async (req, res) => {
 
 blogRouter.get("/", async (req, res) => {
   try {
-    let { page } = req.query;
+    let { page = 1 } = req.query;
+    if (!page) throw new Error("Page is not defined for pagination.");
     page = parseInt(page);
     const numOfBlogsPerPage = 3;
     const blogs = await Blog.find({})

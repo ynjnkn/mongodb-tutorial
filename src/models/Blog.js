@@ -19,13 +19,13 @@ const blogSchema = new Schema(
         last: { type: String, required: true },
       },
     },
-    comments: [commentSchema],
+    // comments: [commentSchema],
   },
   { timestamps: true }
 );
 
 blogSchema.index({ "user._id": 1, updatedAt: 1 });
-blogSchema.index({ title: "text" });
+blogSchema.index({ title: "text", content: "text" });
 
 /*
 // blogSchema에 comments 키가 있으므로 virtual이 필요 없음
