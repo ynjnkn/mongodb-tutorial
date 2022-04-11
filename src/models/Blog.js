@@ -25,6 +25,7 @@ const blogSchema = new Schema(
 );
 
 blogSchema.index({ "user._id": 1, updatedAt: 1 });
+blogSchema.index({ title: "text" });
 
 /*
 // blogSchema에 comments 키가 있으므로 virtual이 필요 없음
