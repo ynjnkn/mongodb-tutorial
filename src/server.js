@@ -31,6 +31,7 @@ const server = async () => {
     app.use("/blogs", blogRouter);
     app.use("/blogs/:blogId/comments", commentRouter);
 
+    // Starts Listening
     app.listen(PORT, async () => {
       console.log(`Server listening on Port ${PORT}`);
       /*

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "env-cmd node ./src/server.js",
-    "dev": "env-cmd nodemon --ignore ./src/client.js --ignore ./practice/* --ignore ./tests/* ./src/server.js"
+    "dev": "env-cmd nodemon --ignore ./src/client.js --ignore ./practice/* --ignore ./tests/* ./src/server.js",
+    "githubtest": "바뀌었니?"
   },
   "keywords": [],
   "author": "",
