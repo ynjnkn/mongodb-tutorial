@@ -28,7 +28,7 @@ commentRouter.post("/", async (req, res) => {
       content,
       user,
       userFullName: `${user.name.first} ${user.name.last}`,
-      blog,
+      blog: blogId,
     });
     // await Promise.all([
     //   comment.save(),
@@ -38,14 +38,13 @@ commentRouter.post("/", async (req, res) => {
     //     {}
     //   ),
     // ]);
-    await Promise.all([
-      comment.save(),
-      Blog.updateOne(
-        { _id: blogId },
-        { $inc: { commentsCount: 1 } },
-        { new: true }
-      ),
-    ]);
+
+    blog.commentsCount++;
+    blog.comments.push(comment);
+    if (blog.comments.length > 3) {
+      blog.comments.shift();
+    }
+    await Promise.all([comment.save(), blog.save()]);
     res.status(200).send({ comment });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
@@ -104,17 +103,26 @@ commentRouter.patch("/:commentId", async (req, res) => {
 commentRouter.delete("/:commentId", async (req, res) => {
   try {
     const { blogId, commentId } = req.params;
+    const numOfCommentsPerPage = 3;
     if (await isDeleteACommentException(commentId, res)) {
       return;
     }
-    const [comment] = await Promise.all([
-      Comment.findByIdAndDelete(commentId),
-      Blog.findOneAndUpdate(
-        { _id: blogId },
-        { $inc: { commentsCount: -1 } },
-        {}
-      ),
-    ]);
+
+    // 댓글 삭제
+    const comment = await Comment.findByIdAndDelete(commentId);
+    // blog의 commentsCount 업데이트
+    const blog = await Blog.findById(blogId);
+    blog.commentsCount -= 1;
+    await blog.save();
+    // blog의 comments 업데이트
+    let newlyNestedComments = await Comment.find({ blog: blogId })
+      .sort({
+        createdAt: -1,
+      })
+      .limit(numOfCommentsPerPage);
+    newlyNestedComments = newlyNestedComments.reverse();
+    blog.comments = newlyNestedComments;
+    await blog.save();
     res.status(200).send({ comment });
   } catch (err) {
     console.log({ error: { name: err.name, message: err.message } });
